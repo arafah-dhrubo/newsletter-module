@@ -31,9 +31,9 @@ defined('_JEXEC') or die;
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if($_POST["method"]==="delete"){
-    $data = ModHelloWorldHelper::deleteUser();
+    $data = ModHelloWorldHelper::Unsubscribe();
     }else{
-        ModHelloWorldHelper::setUser();
+        ModHelloWorldHelper::Subscribe();
     }
 }
 

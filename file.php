@@ -6,9 +6,10 @@ class ModHelloWorldHelper
     protected $db;
 
     public function __construct(){
-        $this->application=JFactory::getApplication();
-        $this->input = new JInput;
-        $this->db = JFactory::getDbo();
+        $factory = JFactory;
+        $this->application=$factory->getApplication();
+        $input = new JInput;
+        $this->db = factory->getDbo();
     }
 
     //Function for showing message
@@ -71,7 +72,7 @@ class ModHelloWorldHelper
 
         $query = $this->db->getQuery(true);
 
-        //Retrieving records from DB
+        //Retriving records from DB
         $query
             ->select($this->db->quoteName(array('id', 'name', 'email')))
             ->from($this->db->quoteName('newsletter'));
