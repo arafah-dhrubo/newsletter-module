@@ -6,10 +6,9 @@ class ModHelloWorldHelper
     protected $db;
 
     public function __construct(){
-        $factory = JFactory;
-        $this->application=$factory->getApplication();
-        $input = new JInput;
-        $this->db = factory->getDbo();
+        $this->application=JFactory::getApplication();
+        $this->input = new JInput;
+        $this->db = JFactory::getDbo();
     }
 
     //Function for showing message
