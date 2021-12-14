@@ -13,9 +13,9 @@ defined('_JEXEC') or die;
 
 <form action="" method="post">
     <label for="">Name:</label><br>
-    <input type="text" name="name" style="width: 100%;" placeholder="Enter Your Name"><br>
+    <input type="text" name="name" style="width: 100%;" placeholder="Enter Your Name" required><br>
     <label for="">Email:</label><br>
-    <input type="email" name="email" style="width: 100%;" placeholder="Enter Your Email"><br>
+    <input type="email" name="email" style="width: 100%;" placeholder="Enter Your Email" required><br>
     <br>
     <input type="submit" style="width: 100%;" value="Subscirbe">
 </form>
@@ -37,7 +37,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 // if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 
 //     $data = ModHelloWorldHelper::getHello();
-    // echo gettype($value);
+//     echo gettype($value);
 
 //     echo "<table>
 //     <thead>

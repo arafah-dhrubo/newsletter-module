@@ -3,6 +3,7 @@ class ModHelloWorldHelper
 {
     public static function setUser()
     {
+        $flag=0;
         $input = new JInput;
         $post = $input->getArray($_POST);
         $name = $post["name"];
@@ -14,18 +15,17 @@ class ModHelloWorldHelper
             ->select($db->quoteName(array('id', 'name', 'email')))
             ->from($db->quoteName('newsletter'));
 
-        // $db->setQuery($query);
+        $db->setQuery($query);
         $result = $db->loadObjectList();
-        echo count($result);
+        
         foreach($result as $key=>$value){
-            echo "DB Value". $value->name;
-            echo "Inserted value ${name}";
-            if($value->name===$name or $value->email===$email){
-                echo "Name or Email Already Exists";
-                echo "DB Data".$value->name, "Inserted value".$name;
+            if($value->email===$email){
+                echo "Email Already Exists";
+                $flag = 1;
                 break;
             }
         }
+       if($flag==0){
         $columns = array('name', 'email');
         $values = array($db->quote($name), $db->quote($email));
         $query->clear();
@@ -37,16 +37,18 @@ class ModHelloWorldHelper
 
         $db->setQuery($query);
         $db->execute();
+        echo "Subscribed successfully";
+       }
         
     }
-//     public static function getHello()
-//     {
-//         $db = JFactory::getDbo();
-//         $query = $db->getQuery(true);
+    // public static function getHello()
+    // {
+    //     $db = JFactory::getDbo();
+    //     $query = $db->getQuery(true);
 
         
-//         return $result;
-//     }
+    //     return $result;
+    // }
 //     public static function deleteHello()
 //     {
 //         $input = JFactory::getApplication()->input;
