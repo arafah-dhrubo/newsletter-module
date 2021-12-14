@@ -29,36 +29,13 @@ defined('_JEXEC') or die;
 </form>
 <?php
 
-
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    ModHelloWorldHelper::setUser();
+    if($_POST["method"]==="delete"){
+    $data = ModHelloWorldHelper::deleteUser();
+    }else{
+        ModHelloWorldHelper::setUser();
+    }
 }
 
-// if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 
-//     $data = ModHelloWorldHelper::getHello();
-//     echo gettype($value);
-
-//     echo "<table>
-//     <thead>
-//         <th>#</th>
-//         <th>Name</th>
-//         <th>Email</th>
-//     </thead>
-//     <tbody>";
-//     echo "<hr><h2>Results</h2>";
-//     foreach ($data as $key => $value) {
-//         echo "<tr>";
-//         echo "<td>" . $key . "</td>";
-//         echo "<td>" . $value->name . "</td>";
-//         echo "<td>" . $value->email . "</td>";
-//         echo "</tr>";
-//     }
-//     echo "</tbody>
-// </table>";
-// }
-// if ($_SERVER['REQUEST_METHOD'] === 'delete') {
-//     $data = ModHelloWorldHelper::deleteHello();
-//     // $data = ModHelloWorldHelper::getHello();
-// }
 ?>
