@@ -28,7 +28,7 @@ class ModHelloWorldHelper
 
         $query
             ->select($this->db->quoteName(array('id', 'name', 'email')))
-            ->from($this->db->quoteName('newsletter'));
+            ->from($this->db->quoteName('d7oom_newsletter'));
 
         $this->db->setQuery($query);
         $result = $this->db->loadObjectList();
@@ -50,7 +50,7 @@ class ModHelloWorldHelper
 
             //Query for insert into DB
             $query
-                ->insert($this->db->quoteName('newsletter'))
+                ->insert($this->db->quoteName('d7oom_newsletter'))
                 ->columns($this->db->quoteName($columns))
                 ->values(implode(',', $values));
 
@@ -74,7 +74,7 @@ class ModHelloWorldHelper
         //Retriving records from DB
         $query
             ->select($this->db->quoteName(array('id', 'name', 'email')))
-            ->from($this->db->quoteName('newsletter'));
+            ->from($this->db->quoteName('d7oom_newsletter'));
 
         $this->db->setQuery($query);
         $result = $this->db->loadObjectList();
@@ -93,7 +93,7 @@ class ModHelloWorldHelper
                 );
 
                 //Deleting record
-                $query->delete($this->db->quoteName('newsletter'));
+                $query->delete($this->db->quoteName('d7oom_newsletter'));
                 $query->where($conditions);
                 $this->db->setQuery($query);
                 $this->db->execute();
