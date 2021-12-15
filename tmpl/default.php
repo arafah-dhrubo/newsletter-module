@@ -30,8 +30,7 @@ defined('_JEXEC') or die;
 <?php
 $helper= new ModHelloWorldHelper;
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $method="";
-    if($_POST["method"]=="delete"){
+if($_POST["method"]=="delete"){
         $helper->Unsubscribe();
     }else{
         $helper->Subscribe();
