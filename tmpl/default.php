@@ -28,12 +28,13 @@ defined('_JEXEC') or die;
     <input type="submit" style="width: 100%;" value="Unsubscirbe">
 </form>
 <?php
-
+$helper= new ModHelloWorldHelper;
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    if($_POST["method"]==="delete"){
-    $data = ModHelloWorldHelper::deleteUser();
+    $method="";
+    if($_POST["method"]=="delete"){
+        $helper->Unsubscribe();
     }else{
-        ModHelloWorldHelper::setUser();
+        $helper->Subscribe();
     }
 }
 
