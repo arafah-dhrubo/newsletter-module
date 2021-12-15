@@ -1,27 +1,42 @@
 <?php
 class ModHelloWorldHelper
 {
-    //Function for adding new user's email
-    public static function subscribe()
+    protected $application;
+    protected $input;
+    protected $db;
+
+    public function __construct(){
+        $this->application=JFactory::getApplication();
+        $this->input = new JInput;
+        $this->db = JFactory::getDbo();
+    }
+
+    //Function for showing message
+    public function showMessage(string $message, string $type)
+    {
+        return $this->application->enqueueMessage(JText::_($message), $type);
+    }
+
+    //Function for subscribe
+    public function Subscribe()
     {
         $flag = 0;
-        $application = JFactory::getApplication();
-        $name = $_POST["name"];
-        $email = $_POST["email"];
-        $db = JFactory::getDbo();
-        $query = $db->getQuery(true);
+        $post = $this->input->getArray($_POST);
+        $name = $post["name"];
+        $email = $post["email"];
+        $query = $this->db->getQuery(true);
 
         $query
-            ->select($db->quoteName(array('id', 'name', 'email')))
-            ->from($db->quoteName('newsletter'));
+            ->select($this->db->quoteName(array('id', 'name', 'email')))
+            ->from($this->db->quoteName('newsletter'));
 
-        $db->setQuery($query);
-        $result = $db->loadObjectList();
+        $this->db->setQuery($query);
+        $result = $this->db->loadObjectList();
 
         //Checking if user email address is already added
-        foreach ($result as $key => $value) {
+        foreach ($result as $value) {
             if ($value->email === $email) {
-                $application->enqueueMessage(JText::_('Email Already Exists'), 'error');
+                $this->showMessage('Email Already Exists', 'error');
                 $flag = 1;
                 break;
             }
@@ -30,65 +45,65 @@ class ModHelloWorldHelper
         //If user email is new then email address will be added
         if ($flag == 0) {
             $columns = array('name', 'email');
-            $values = array($db->quote($name), $db->quote($email));
+            $values = array($this->db->quote($name), $this->db->quote($email));
             $query->clear();
 
+            //Query for insert into DB
             $query
-                ->insert($db->quoteName('newsletter'))
-                ->columns($db->quoteName($columns))
+                ->insert($this->db->quoteName('newsletter'))
+                ->columns($this->db->quoteName($columns))
                 ->values(implode(',', $values));
 
-            $db->setQuery($query);
-            $db->execute();
-            $application->enqueueMessage(JText::_('Subscribed successfully'), 'success');
+            $this->db->setQuery($query);
+            $this->db->execute();
+            $this->showMessage('Subscribed successfully', 'success');
         }
     }
 
-    public static function unSubscribe()
+    //Function for unsubscribe
+    public function Unsubscribe()
     {
         $flag = 0;
-        $application = JFactory::getApplication();
 
         //Getting user input
-        $input = JFactory::getApplication()->input;
+        $input = $this->application->input;
         $email = $input->get('email', '', 'string');
-        $db = JFactory::getDbo();
-        $query = $db->getQuery(true);
 
-        //Retrieving records from DB
+        $query = $this->db->getQuery(true);
+
+        //Retriving records from DB
         $query
-            ->select($db->quoteName(array('id', 'name', 'email')))
-            ->from($db->quoteName('newsletter'));
+            ->select($this->db->quoteName(array('id', 'name', 'email')))
+            ->from($this->db->quoteName('newsletter'));
 
-        $db->setQuery($query);
-        $result = $db->loadObjectList();
+        $this->db->setQuery($query);
+        $result = $this->db->loadObjectList();
 
         //Comparing records with input
-        foreach ($result as $key => $value) {
+        foreach ($result as $value) {
             if ($value->email === $email) {
                 $flag = 1;
                 $query->clear();
 
                 //Condition for delete a record
                 $conditions = array(
-                    $db->quotename('id') . ' = ' .  $db->quote($value->id),
-                    $db->quotename('name') . ' = ' .  $db->quote($value->name),
-                    $db->quotename('email') . ' = ' .  $db->quote($value->email)
+                    $this->db->quotename('id') . ' = ' .  $this->db->quote($value->id),
+                    $this->db->quotename('name') . ' = ' .  $this->db->quote($value->name),
+                    $this->db->quotename('email') . ' = ' .  $this->db->quote($value->email)
                 );
 
                 //Deleting record
-                $query->delete($db->quoteName('newsletter'));
+                $query->delete($this->db->quoteName('newsletter'));
                 $query->where($conditions);
-                $db->setQuery($query);
-                $result = $db->execute();
-                $application->enqueueMessage(JText::_('Unsubscribed successfully'), 'success');
+                $this->db->setQuery($query);
+                $this->db->execute();
+                $this->showMessage('Unsubscribed successfully', 'success');
                 break;
             }
         }
 
         if ($flag == 0) {
-            $application->enqueueMessage(JText::_("Email Address Not Found"), 'info');
+            $this->showMessage("Email Address Not Found", 'error');
         }
-        // return $email;
     }
 }
