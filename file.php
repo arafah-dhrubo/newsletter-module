@@ -1,7 +1,9 @@
 <?php
 class ModHelloWorldHelper
 {
-    //Function for adding new user's email
+    
+
+    //Function for adding new user's email and mark as subscribe
     public static function subscribe()
     {
         $flag = 0;
@@ -44,6 +46,7 @@ class ModHelloWorldHelper
         }
     }
 
+    //Function for mark as unsubscribe
     public static function unSubscribe()
     {
         $flag = 0;
@@ -89,6 +92,5 @@ class ModHelloWorldHelper
         if ($flag == 0) {
             $application->enqueueMessage(JText::_("Email Address Not Found"), 'info');
         }
-        // return $email;
     }
 }

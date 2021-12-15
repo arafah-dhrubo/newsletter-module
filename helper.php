@@ -4,9 +4,9 @@ class ModHelloWorldHelper
     protected $application;
     protected $input;
     protected $db;
-
-    public function __construct(){
-        $this->application=JFactory::getApplication();
+    public function __construct()
+    {
+        $this->application = JFactory::getApplication();
         $this->input = new JInput;
         $this->db = JFactory::getDbo();
     }
@@ -17,7 +17,21 @@ class ModHelloWorldHelper
         return $this->application->enqueueMessage(JText::_($message), $type);
     }
 
-    //Function for subscribe
+    //Function for showing all email address
+    public function allEmails()
+    {
+        $query = $this->db->getQuery(true);
+
+        $query
+            ->select($this->db->quoteName(array('email', 'is_subscribed')))
+            ->from($this->db->quoteName('d7oom_newsletter'));
+
+        $this->db->setQuery($query);
+        $result = $this->db->loadObjectList();
+        return $result;
+    }
+
+    //Function for adding new user's email and mark as subscribe
     public function Subscribe()
     {
         $flag = 0;
@@ -45,19 +59,23 @@ class ModHelloWorldHelper
 
         //If user email is new then email address will be added
         if ($flag == 0) {
-            $columns = array('name', 'email', 'is_subscribed');
-            $values = array($this->db->quote($name), $this->db->quote($email), $this->db->quote($is_subscribed));
-            $query->clear();
+            if ($value->is_subscribed == 1) {
+                $this->showMessage('Email subscribed Already', 'error');
+            } else {
+                $columns = array('name', 'email', 'is_subscribed');
+                $values = array($this->db->quote($name), $this->db->quote($email), $this->db->quote($is_subscribed));
+                $query->clear();
 
-            //Query for insert into DB
-            $query
-                ->insert($this->db->quoteName('d7oom_newsletter'))
-                ->columns($this->db->quoteName($columns))
-                ->values(implode(',', $values));
+                //Query for insert into DB
+                $query
+                    ->insert($this->db->quoteName('d7oom_newsletter'))
+                    ->columns($this->db->quoteName($columns))
+                    ->values(implode(',', $values));
 
-            $this->db->setQuery($query);
-            $this->db->execute();
-            $this->showMessage('Subscribed successfully', 'success');
+                $this->db->setQuery($query);
+                $this->db->execute();
+                $this->showMessage('Subscribed successfully', 'success');
+            }
         }
     }
 
@@ -94,12 +112,16 @@ class ModHelloWorldHelper
                 );
 
                 //Deleting record
-                $query->update($this->db->quoteName('d7oom_newsletter'));
-                $query->where($conditions);
-                $query->set( $this->db->quotename('is_subscribed') . ' = ' .  $this->db->quote(0),);
-                $this->db->setQuery($query);
-                $this->db->execute();
-                $this->showMessage('Unsubscribed successfully', 'success');
+                if ($value->is_subscribed == 0) {
+                    $this->showMessage('Email Unsubscribed Already', 'error');
+                } else {
+                    $query->update($this->db->quoteName('d7oom_newsletter'));
+                    $query->where($conditions);
+                    $query->set($this->db->quotename('is_subscribed') . ' = ' .  $this->db->quote(0),);
+                    $this->db->setQuery($query);
+                    $this->db->execute();
+                    $this->showMessage('Unsubscribed successfully', 'success');
+                }
                 break;
             }
         }

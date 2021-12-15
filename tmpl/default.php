@@ -23,19 +23,19 @@ defined('_JEXEC') or die;
     <div class="tab-content">
         <div id="subscribe" class="tab-pane fade in active">
             <form action="" method="post">
-                <label for="">Name:</label><br>
-                <input type="text" name="name" style="width: 100%;" placeholder="Enter Your Name" required><br>
-                <label for="">Email:</label><br>
-                <input type="email" name="email" style="width: 100%;" placeholder="Enter Your Email" required><br>
+                <label for="name">Name:</label><br>
+                <input type="text" name="name" style="width: 100%;" id="name" placeholder="Enter Your Name" required><br>
+                <label for="email">Email:</label><br>
+                <input type="email" name="email" id="email" style="width: 100%;" placeholder="Enter Your Email" required><br>
                 <br>
                 <input type="submit" style="width: 100%;" value="Subscirbe">
             </form>
         </div>
         <div id="unsubscribe" class="tab-pane fade">
             <form action="" method="post">
-                <label for="">
+                <label for="email">
                     <input name="method" type="hidden" value="delete" />Email:</label><br>
-                <input type="email" name="email" style="width: 100%;" placeholder="Enter Your Email to Unsubscribe"><br>
+                <input type="email" name="email" style="width: 100%;" id ="email" placeholder="Enter Your Email to Unsubscribe"><br>
                 <br>
                 <input type="submit" style="width: 100%;" value="Unsubscirbe">
             </form>
@@ -55,6 +55,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $helper->Subscribe();
     }
 }
-
-
+$user = JFactory::getUser();
+if ($user->authorise('core.admin')) {
+    $emailList=$helper->allEmails();
+    foreach($emailList as $key=>$value){
+        echo $value->email;
+        echo $value->is_subscribed=0?" unsubscribed ":" subscribed ";
+    }
+}
 ?>
