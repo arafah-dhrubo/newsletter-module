@@ -24,6 +24,7 @@ class ModHelloWorldHelper
         $post = $this->input->getArray($_POST);
         $name = $post["name"];
         $email = $post["email"];
+        $is_subscribed = 1;
         $query = $this->db->getQuery(true);
 
         $query
@@ -44,8 +45,8 @@ class ModHelloWorldHelper
 
         //If user email is new then email address will be added
         if ($flag == 0) {
-            $columns = array('name', 'email');
-            $values = array($this->db->quote($name), $this->db->quote($email));
+            $columns = array('name', 'email', 'is_subscribed');
+            $values = array($this->db->quote($name), $this->db->quote($email), $this->db->quote($is_subscribed));
             $query->clear();
 
             //Query for insert into DB
@@ -88,13 +89,14 @@ class ModHelloWorldHelper
                 //Condition for delete a record
                 $conditions = array(
                     $this->db->quotename('id') . ' = ' .  $this->db->quote($value->id),
-                    $this->db->quotename('name') . ' = ' .  $this->db->quote($value->name),
-                    $this->db->quotename('email') . ' = ' .  $this->db->quote($value->email)
+                    // $this->db->quotename('name') . ' = ' .  $this->db->quote($value->name),
+                    // $this->db->quotename('email') . ' = ' .  $this->db->quote($value->email)
                 );
 
                 //Deleting record
-                $query->delete($this->db->quoteName('d7oom_newsletter'));
+                $query->update($this->db->quoteName('d7oom_newsletter'));
                 $query->where($conditions);
+                $query->set( $this->db->quotename('is_subscribed') . ' = ' .  $this->db->quote(0),);
                 $this->db->setQuery($query);
                 $this->db->execute();
                 $this->showMessage('Unsubscribed successfully', 'success');
